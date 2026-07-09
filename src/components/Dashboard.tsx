@@ -60,7 +60,7 @@ export const Dashboard = () => {
                     Siguiente
                 </button>
             </div>
-            <button type="button" onClick={() => navigate('/courses/new')}>
+            <button type="button" onClick={() => navigate('/course/new')}>
                 Crear Nuevo Curso
             </button>
         </div>
