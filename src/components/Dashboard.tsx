@@ -5,23 +5,26 @@ import { useAuth } from '../context/AuthContext';
 
 export const Dashboard = () => {
     const [courses, setCourses] = useState<any[]>([]);
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const navigate = useNavigate();
-    useAuth();
 
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await CourseService.getCourses();
-                const page = response.data;
-                setCourses(Array.isArray(page?.content) ? page.content : []);
+                const response = await CourseService.getCourses(page);
+                const pageData = response.data;
+                setCourses(Array.isArray(pageData?.content) ? pageData.content : []);
+                setTotalPages(pageData?.totalPages ?? 0);
             } catch (error) {
                 console.error('Error al traer los cursos', error);
                 setCourses([]);
+                setTotalPages(0);
             }
         };
 
         fetchCourses();
-    }, []);
+    }, [page]);
 
     return (
         <div>
@@ -46,7 +49,18 @@ export const Dashboard = () => {
                     ))}
                 </ul>
             )}
-            <button type="button" onClick={() => navigate('/course/new')}>
+            <div style={{ marginTop: '1rem' }}>
+                <button type="button" onClick={() => setPage((prev) => Math.max(prev - 1, 0))} disabled={page === 0}>
+                    Anterior
+                </button>
+                <span style={{ margin: '0 1rem' }}>
+                    Pagina {page + 1} de {Math.max(totalPages, 1)}
+                </span>
+                <button type="button" onClick={() => setPage((prev) => prev + 1)} disabled={page + 1 >= totalPages}>
+                    Siguiente
+                </button>
+            </div>
+            <button type="button" onClick={() => navigate('/courses/new')}>
                 Crear Nuevo Curso
             </button>
         </div>

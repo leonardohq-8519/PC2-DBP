@@ -23,7 +23,7 @@ export const AuthService = {
 }
 
 export const CourseService = {
-    getCourses: () => api.get('/courses'),
+    getCourses: (page = 0) => api.get(`/courses?page=${page}`),
     getCourse: (id: number) => api.get(`/courses/${id}`),
     createCourse: (data: any) => api.post('/courses', data),
     updateCourse: (id: number, data: any) => api.patch(`/courses/${id}`, data),
